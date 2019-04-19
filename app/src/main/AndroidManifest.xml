@@ -11,22 +11,43 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/accessoryservices" />
+
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SAPconnection"
-            android:label="@string/SAPactivityName">
-        </activity>
+            android:label="@string/SAPactivityName"></activity>
 
+        <service android:name="uk.ac.aber.dcs.pid4.tizencom.Service" />
 
+        <receiver android:name="com.samsung.android.sdk.accessory.RegisterUponInstallReceiver">
+            <intent-filter>
+                <action android:name="com.samsung.accessory.action.REGISTER_AGENT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.samsung.android.sdk.accessory.MessageReceiver">
+            <intent-filter>
+                <action android:name="com.samsung.accessory.action.MESSAGE_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="AccessoryServicesLocation"
+            android:value="/res/xml/accessoryservices.xml" />
+        <meta-data
+            android:name="GearAppType"
+            android:value="tpk" />
     </application>
 
 </manifest>
