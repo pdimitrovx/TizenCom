@@ -1,9 +1,11 @@
 package uk.ac.aber.dcs.pid4.tizencom;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextMessage;
 
     private Button start_Btn, connect_test_Btn;
+    private boolean isServiceBound = false;
+    private Service_SAP SAPservice = null;
+private boolean start_Btn_clicked = false;
+    Service_SAP mConsumerService = null;
+
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -83,7 +90,48 @@ public class MainActivity extends AppCompatActivity {
         //setup the connection test button
         connect_test_Btn = (Button) findViewById(R.id.connectTest);
 
+        // Bind service
+        isServiceBound = bindService(new Intent(MainActivity.this, Service_SAP.class), mConnection, Context.BIND_AUTO_CREATE);
     }
 
 
+    public void mOnClick(View v) {
+        switch (v.getId()) {
+            case R.id.connectTest: {
+                if (isServiceBound == true && SAPservice != null) {
+                    SAPservice.findPeers();
+                   start_Btn_clicked = false;
+                }
+                break;
+            }
+            case R.id.start_btn: {
+                if (isServiceBound == true && start_Btn_clicked == false && SAPservice != null) {
+                    if (SAPservice.sendData("Hello Message!") != -1) {
+                        //todo wtf is it sendButtonClicked = true;
+                    }else {
+                        //todo wtfff sendButtonClicked = false;
+                    }
+                }
+                break;
+            }
+            default:
+        }
+    }
+    private final ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+             mConsumerService = ((Service_SAP.LocalBinder) service).getService();
+            //updateTextView("onServiceConnected");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+            mConsumerService = null;
+            isServiceBound = false;
+            //updateTextView("onServiceDisconnected");
+        }
+    };
+
 }
+//added the service connection thing that is needed in order to set up the sercive bound thing. Explain taht
+//added         android:onClick="mOnClick" to each button so the trigger that method that has a switch case statement in it!

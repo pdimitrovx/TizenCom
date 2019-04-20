@@ -29,7 +29,7 @@
             android:name=".SAPconnection"
             android:label="@string/SAPactivityName"></activity>
 
-        <service android:name="uk.ac.aber.dcs.pid4.tizencom.Service" />
+        <service android:name="uk.ac.aber.dcs.pid4.tizencom.Service_SAP" />
 
         <receiver android:name="com.samsung.android.sdk.accessory.RegisterUponInstallReceiver">
             <intent-filter>

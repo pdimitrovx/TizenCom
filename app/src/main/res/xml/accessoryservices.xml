@@ -37,7 +37,7 @@
             id="/sample/tizencom"
             name="tizencom"
             role="consumer"
-            serviceImpl="uk.ac.aber.dcs.pid4.tizencom.Service"
+            serviceImpl="uk.ac.aber.dcs.pid4.tizencom.Service_SAP"
             version="1.0">
             <supportedTransports>
                 <transport type="TRANSPORT_BT" />

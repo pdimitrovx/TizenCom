@@ -3,6 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="NoPeersFound">No peers have been found!!!</string>
+
     <string name="title_activity_view_data">ViewData</string>
     <string name="SAPactivityName">SAPconnection</string>
+    <string name="start">Start</string>
+    <string name="viewdata">ViewData</string>
 </resources>
