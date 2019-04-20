@@ -9,4 +9,5 @@
     <string name="SAPactivityName">SAPconnection</string>
     <string name="start">Start</string>
     <string name="viewdata">ViewData</string>
+    <string name="coonecttest">CoonectTest</string>
 </resources>
