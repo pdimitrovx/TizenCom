@@ -25,13 +25,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView mTextMessage; //navigation stuff (used to display status app)
-
+    private static TextView mTextMessage; //navigation stuff (used to display status app)
 
 
     private Button start_Btn, connect_test_Btn;
     private boolean isServiceBound = false;
-    private boolean start_Btn_clicked = false;
+    private static boolean start_Btn_clicked = false;
     private Service_SAP mConsumerService = null;
     private static MessageAdapter mMessageAdapter; //todo mesasge stuff, describe ite etc
     private ListView mMessageListView; //todo message stuff
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mMessageListView.setAdapter(mMessageAdapter);
 
         //todo navigatio drawer stuff, mayeb replace with fragment
-        v = findViewById(R.id.app_status);
+        mTextMessage = findViewById(R.id.app_status);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -132,45 +131,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void updateTextView(final String str) {
-        mTextView.setText(str);
+        mTextMessage.setText(str);
     }
 
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        //todo, tidy this code up and deploy fragments / tabs or remove alltogether
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
-        }
-    };
-
-
-    //todo message nested class have a look
-    static final class Message {
-        String data;
-
-        public Message(String data) {
-            super();
-            this.data = data;
-        }
+    public static void updateButtonState(boolean enable) {
+        start_Btn_clicked = enable;
     }
 
-    //todo MESSAGE STUFF URGENT
-    class MessageAdapter extends BaseAdapter {
+    private class MessageAdapter extends BaseAdapter {
         private static final int MAX_MESSAGES_TO_DISPLAY = 20;
         private List<Message> mMessages;
 
@@ -179,29 +147,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         void addMessage(final Message msg) {
-            // Runnable newTask = (new Runnable() {
-            //  @Override
-            //  public void run() {
-            if (mMessages.size() == MAX_MESSAGES_TO_DISPLAY) {
-                mMessages.remove(0);
-                mMessages.add(msg);
-            } else {
-                mMessages.add(msg);
-            }
-            notifyDataSetChanged();
-            mMessageListView.setSelection(getCount() - 1);
-            //   }
-            //});
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mMessages.size() == MAX_MESSAGES_TO_DISPLAY) {
+                        mMessages.remove(0);
+                        mMessages.add(msg);
+                    } else {
+                        mMessages.add(msg);
+                    }
+                    notifyDataSetChanged();
+                    mMessageListView.setSelection(getCount() - 1);
+                }
+            });
         }
 
         void clear() {
-            // runOnUiThread(new Runnable() {
-            ///  @Override
-            //public void run() {
-            mMessages.clear();
-            notifyDataSetChanged();
-            // }
-            // });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mMessages.clear();
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         @Override
@@ -224,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View messageRecordView = null;
             if (inflator != null) {
-                messageRecordView = inflator.inflate(R.layout.message, null); //todo sort out what message does, item in list?
+                messageRecordView = inflator.inflate(R.layout.message, null);
                 TextView tvData = (TextView) messageRecordView.findViewById(R.id.tvData);
                 Message message = (Message) getItem(position);
                 tvData.setText(message.data);
@@ -232,6 +200,35 @@ public class MainActivity extends AppCompatActivity {
             return messageRecordView;
         }
     }
+
+    private static final class Message {
+        String data;
+
+        public Message(String data) {
+            super();
+            this.data = data;
+        }
+    }
+
+
+    //todo navigation change listener, built in code, maybe remove or replavce with frag
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    mTextMessage.setText(R.string.title_home);
+                    return true;
+                case R.id.navigation_dashboard:
+                    mTextMessage.setText(R.string.title_dashboard);
+                    return true;
+                case R.id.navigation_notifications:
+                    mTextMessage.setText(R.string.title_notifications);
+                    return true;
+            }
+            return false;
+        }
+    };
 }
 //added the service connection thing that is needed in order to set up the sercive bound thing. Explain taht
 //added         android:onClick="mOnClick" to each button so the trigger that method that has a switch case statement in it!
