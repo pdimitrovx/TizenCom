@@ -25,12 +25,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView mTextMessage;
+    private TextView mTextMessage; //navigation stuff (used to display status app)
+
+
+
     private Button start_Btn, connect_test_Btn;
     private boolean isServiceBound = false;
     private boolean start_Btn_clicked = false;
     private Service_SAP mConsumerService = null;
-
     private static MessageAdapter mMessageAdapter; //todo mesasge stuff, describe ite etc
     private ListView mMessageListView; //todo message stuff
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         start_Btn_clicked = false;
 
+        mTextMessage = (TextView) findViewById(R.id.app_status);
 
         // Bind service
         isServiceBound = bindService(new Intent(MainActivity.this,
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         mMessageListView.setAdapter(mMessageAdapter);
 
         //todo navigatio drawer stuff, mayeb replace with fragment
-        mTextMessage = findViewById(R.id.message);
+        v = findViewById(R.id.app_status);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -113,16 +116,25 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             mConsumerService = ((Service_SAP.LocalBinder) service).getService();
-            //updateTextView("onServiceConnected");
+            updateTextView("onServiceConnected");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName className) {
             mConsumerService = null;
             isServiceBound = false;
-            //updateTextView("onServiceDisconnected");
+            updateTextView("onServiceDisconnected");
         }
     };
+
+    public static void addMessage(String data) {
+        mMessageAdapter.addMessage(new Message(data));
+    }
+
+    public static void updateTextView(final String str) {
+        mTextView.setText(str);
+    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
