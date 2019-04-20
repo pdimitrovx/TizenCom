@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        start_Btn_clicked = false;
+
 
         // Bind service
         isServiceBound = bindService(new Intent(MainActivity.this,
@@ -77,18 +79,17 @@ public class MainActivity extends AppCompatActivity {
         start_Btn = findViewById(R.id.start_btn);
 
         //setup the connection test button
-        connect_test_Btn = findViewById(R.id.connectTest);
+        connect_test_Btn = findViewById(R.id.findPeerAgentBtn);
 
     }
 
 
     public void mOnClick(View v) {
         switch (v.getId()) {
-            case R.id.connectTest: {
+            case R.id.findPeerAgentBtn: {
                 if (isServiceBound == true && mConsumerService != null) {
                     mConsumerService.findPeers();
                     start_Btn_clicked = false;
-                    // mConsumerService.sendData("Hello Message!");
                 }
                 break;
             }
@@ -96,8 +97,10 @@ public class MainActivity extends AppCompatActivity {
                 if (isServiceBound == true && start_Btn_clicked == false && mConsumerService != null) {
                     if (mConsumerService.sendData("Hello Message!") != -1) {
                         //todo wtf is it sendButtonClicked = true;
+                        start_Btn_clicked = true;
                     } else {
                         //todo wtfff sendButtonClicked = false;
+                        start_Btn_clicked = false;
                     }
                 }
                 break;
