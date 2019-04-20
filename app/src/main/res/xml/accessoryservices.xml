@@ -32,10 +32,10 @@
     ]>
 <resources>
 
-    <application name="TizenCom" >
+    <application name="HelloMessageConsumer" >
         <serviceProfile
-            id="/sample/tizencom"
-            name="tizencom"
+            id="/sample/hellomessage"
+            name="hellomessage"
             role="consumer"
             serviceImpl="uk.ac.aber.dcs.pid4.tizencom.Service_SAP"
             version="1.0">
